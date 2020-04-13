@@ -44,14 +44,12 @@ def require_jwt(function):
     @functools.wraps(function)
     def decorated_function(*args, **kws):
         if not 'Authorization' in request.headers:
-            print("authorization is not in the header")
             abort(401)
         data = request.headers['Authorization']
         token = str.replace(str(data), 'Bearer ', '')
         try:
             jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
         except: # pylint: disable=bare-except
-            print("error in decoding")
             abort(401)
 
         return function(*args, **kws)
@@ -90,14 +88,12 @@ def decode_jwt():
     Check user token and return non-secret data
     """
     if not 'Authorization' in request.headers:
-        print("authorizatio is not in the header")
         abort(401)
     data = request.headers['Authorization']
     token = str.replace(str(data), 'Bearer ', '')
     try:
         data = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
     except: # pylint: disable=bare-except
-        print("error in decode")
         abort(401)
 
 
